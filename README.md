@@ -14,5 +14,5 @@
 - H2 콘솔: `http://localhost:8080/h2-console`
 
 ## 작동 순서
-- REST 요청 : `DispatcherServlet` → `MemberController` → `Service` → `Repository(JPA)` → DB → JSON 반환
-- MVC 요청 : `DispatcherServlet` → `WebMemberController` → `Service` → `Repository(JPA)` → Thymeleaf → HTML 반환
+- REST 요청 : `DispatcherServlet` → `HandlerMapping` → `MemberController` → `Service` → `Repository(JPA)` → DB → JSON 반환
+- MVC 요청 : `DispatcherServlet` → `HandlerMapping` → `WebMemberController` → `Service` → `Repository(JPA)` → Thymeleaf → HTML 반환
