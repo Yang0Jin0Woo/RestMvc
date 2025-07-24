@@ -27,8 +27,9 @@ public class MemberController {
     }
 
     @GetMapping("/{id}")
-    public Member getOne(@PathVariable Long id) {
-        return memberService.findById(id);
+    public ResponseEntity<Member> getOne(@PathVariable Long id) {
+        Member member = memberService.findById(id);
+        return ResponseEntity.ok(member);
     }
 
     @PostMapping
