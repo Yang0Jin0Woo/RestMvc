@@ -22,8 +22,9 @@ public class MemberController {
     }
 
     @GetMapping
-    public List<Member> getAll() {
-        return memberService.findAll();
+    public ResponseEntity<List<Member>> getAll() {
+        List<Member> members = memberService.findAll();
+        return ResponseEntity.ok(members);
     }
 
     @GetMapping("/{id}")
