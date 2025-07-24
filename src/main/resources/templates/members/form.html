@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <!-- id 값 있으면 '회원 수정', 없으면 '새 회원 등록' -->
+    <title th:text="${id} != null ? '회원 수정' : '새 회원 등록'">폼</title>
+</head>
+<body>
+<h1 th:text="${id} != null ? '회원 수정' : '새 회원 등록'">폼</h1>
+
+<form th:action="@{${id} != null ? '/members/' + ${id} + '/edit' : '/members'}"
+      th:object="${memberDto}"
+      method="post">
+    <label>이름: <input type="text" th:field="*{name}" /></label><br/><br/>
+    <label>이메일: <input type="email" th:field="*{email}" /></label><br/><br/>
+    <button type="submit">저장</button>
+</form>
+
+<p><a th:href="@{/members}">← 목록으로 돌아가기</a></p>
+</body>
+</html>
