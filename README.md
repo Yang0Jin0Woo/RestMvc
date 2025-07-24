@@ -16,3 +16,13 @@
 ## 작동 순서
 - REST 요청 : `DispatcherServlet` → `HandlerMapping` → `MemberController` → `Service` → `Repository(JPA)` → DB → JSON 반환
 - MVC 요청 : `DispatcherServlet` → `HandlerMapping` → `WebMemberController` → `Service` → `Repository(JPA)` → Thymeleaf → HTML 반환
+
+### application.properties
+```
+spring.datasource.url=jdbc:h2:tcp://localhost/~/test
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.h2.console.enabled=true
+spring.jpa.hibernate.ddl-auto=update
+```
