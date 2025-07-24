@@ -12,3 +12,7 @@
 - 브라우저 : `http://localhost:8080/members` 접속
 - REST API : `http://localhost:8080/api/members` postman 접속
 - H2 콘솔: `http://localhost:8080/h2-console`
+
+## 작동 순서
+- REST 요청 : `DispatcherServlet` → `MemberController` → `Service` → `Repository(JPA)` → DB → JSON 반환
+- MVC 요청 : `DispatcherServlet` → `WebMemberController` → `Service` → `Repository(JPA)` → Thymeleaf → HTML 반환
