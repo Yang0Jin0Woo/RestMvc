@@ -14,18 +14,18 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MemberService {
 
-    //private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-//    @Autowired
-//    public MemberService(MemberRepository memberRepository) {
-//        this.memberRepository = memberRepository;
-//    }
-
-    private final MemberEMRepository memberRepository;
-
-    public MemberService(MemberEMRepository memberRepository) {
+    @Autowired
+    public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
+
+//    private final MemberEMRepository memberRepository;
+//
+//    public MemberService(MemberEMRepository memberRepository) {
+//        this.memberRepository = memberRepository;
+//    }
 
     public List<Member> findAll() {
         return memberRepository.findAll();
