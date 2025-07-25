@@ -2,6 +2,7 @@ package com.example.sshrestapi.service;
 
 import com.example.sshrestapi.dto.MemberDto;
 import com.example.sshrestapi.entity.Member;
+import com.example.sshrestapi.repository.MemberEMRepository;
 import com.example.sshrestapi.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,16 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MemberService {
 
-    private final MemberRepository memberRepository;
+    //private final MemberRepository memberRepository;
 
-    @Autowired
-    public MemberService(MemberRepository memberRepository) {
+//    @Autowired
+//    public MemberService(MemberRepository memberRepository) {
+//        this.memberRepository = memberRepository;
+//    }
+
+    private final MemberEMRepository memberRepository;
+
+    public MemberService(MemberEMRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
