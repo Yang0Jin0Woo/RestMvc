@@ -17,6 +17,10 @@
 - REST 요청 : `DispatcherServlet` → `HandlerMapping` → `MemberController` → `Service` → `Repository(JPA)` → DB → JSON 반환
 - MVC 요청 : `DispatcherServlet` → `HandlerMapping` → `WebMemberController` → `Service` → `Repository(JPA)` → Thymeleaf → HTML 반환
 
+## 통합 테스트
+- `@SpringBootTest` 기반의 전체 애플리케이션 흐름 테스트
+- 서비스 계층과 DB 간의 연동 검증
+
 ### application.properties
 ```
 spring.datasource.url=jdbc:h2:tcp://localhost/~/test
