@@ -1,5 +1,6 @@
 ## 소개
 - 회원(Member) 데이터를 관리하는 CRUD 프로젝트
+(Spring Data JPA → JdbcTemplate 마이그레이션 예제 포함)
 - `/api/members` 경로 : RESTful API
 - `/members` 경로 : Thymeleaf 기반의 웹.
 
@@ -23,10 +24,17 @@
 
 ### application.properties
 ```
+# H2 DB 설정
 spring.datasource.url=jdbc:h2:tcp://localhost/~/test
 spring.datasource.driver-class-name=org.h2.Driver
 spring.datasource.username=sa
 spring.datasource.password=
+
+# JPA
 spring.h2.console.enabled=true
 spring.jpa.hibernate.ddl-auto=update
+
+# SQL 초기화 설정
+spring.sql.init.mode=always
+spring.sql.init.schema-locations=classpath:schema.sql
 ```
