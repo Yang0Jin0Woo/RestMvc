@@ -30,7 +30,8 @@ public class WebMemberController {
 
     @GetMapping("/new")
     public String createForm(Model model) {
-        model.addAttribute("memberDto", new MemberDto());
+        MemberDto memberDto = new MemberDto();
+        model.addAttribute("memberDto", memberDto);
         return "members/form";
     }
 
@@ -42,7 +43,8 @@ public class WebMemberController {
 
     @GetMapping("/{id}")
     public String view(@PathVariable Long id, Model model) {
-        model.addAttribute("member", memberService.findById(id));
+        Member member = memberService.findById(id);
+        model.addAttribute("member", member);
         return "members/view";
     }
 

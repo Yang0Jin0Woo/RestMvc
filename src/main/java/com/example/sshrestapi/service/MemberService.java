@@ -55,7 +55,8 @@ public class MemberService {
 
     @Transactional
     public void delete(Long id) {
-        if (!memberRepository.existsById(id)) {
+        boolean exist = memberRepository.existsById(id);
+        if (!exist) {
             throw new RuntimeException("엔티티가 존재하지 않습니다.");
         }
         memberRepository.deleteById(id);
