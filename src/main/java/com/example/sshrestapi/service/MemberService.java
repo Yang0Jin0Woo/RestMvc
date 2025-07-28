@@ -2,7 +2,6 @@ package com.example.sshrestapi.service;
 
 import com.example.sshrestapi.dto.MemberDto;
 import com.example.sshrestapi.entity.Member;
-import com.example.sshrestapi.repository.MemberEMRepository;
 import com.example.sshrestapi.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
