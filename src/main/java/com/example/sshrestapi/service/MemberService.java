@@ -21,12 +21,6 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-//    private final MemberEMRepository memberRepository;
-//
-//    public MemberService(MemberEMRepository memberRepository) {
-//        this.memberRepository = memberRepository;
-//    }
-
     public List<Member> findAll() {
         return memberRepository.findAll();
     }
