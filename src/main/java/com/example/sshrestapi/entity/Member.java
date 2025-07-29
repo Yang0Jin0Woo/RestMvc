@@ -9,9 +9,6 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Member {
 
     @Id
@@ -20,4 +17,11 @@ public class Member {
 
     private String name;
     private String email;
+
+    public Member(){}
+
+    public Member(String name, String email){
+        this.name=name;
+        this.email=email;
+    }
 }

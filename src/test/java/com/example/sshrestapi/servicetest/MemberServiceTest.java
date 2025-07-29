@@ -1,6 +1,5 @@
 package com.example.sshrestapi.servicetest;
 
-import com.example.sshrestapi.dto.MemberDto;
 import com.example.sshrestapi.entity.Member;
 import com.example.sshrestapi.repository.MemberRepository;
 import com.example.sshrestapi.service.MemberService;
@@ -16,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 public class MemberServiceTest {
+
     @Autowired
     private MemberService memberService;
 
@@ -23,41 +23,40 @@ public class MemberServiceTest {
     private MemberRepository memberRepository;
 
     @Test
-    void 회원_정보_생성(){
+    void 회원_정보_생성() {
         // given
-        MemberDto createDto = MemberDto.builder()
-                .name("Alice")
-                .email("alice@example.com")
-                .build();
+        Member member = new Member("Alice", "alice@example.com");
+
         // when
-        Member saved = memberService.create(createDto);
+        Member saved = memberService.save(member);
+
         // then
         assertThat(saved.getId()).isNotNull();
     }
 
     @Test
-    void 회원_단일_조회(){
+    void 회원_단일_조회() {
         // given
-        MemberDto dto = MemberDto.builder()
-                .name("Alice")
-                .email("alice@example.com")
-                .build();
-        Member saved = memberService.create(dto);
+        Member member = new Member("Alice", "alice@example.com");
+        Member saved = memberService.save(member);
+
         // when
-        Member found = memberService.findById(saved.getId());
+        Member found = memberService.findById(saved.getId()).orElse(null);
+
         // then
         assertThat(found).isNotNull();
+        assertThat(found.getName()).isEqualTo("Alice");
     }
 
     @Test
-    void 회원_리스트_조회(){
+    void 회원_리스트_조회() {
         // given
-        MemberDto dto1 = MemberDto.builder().name("Bob").email("bob@example.com").build();
-        MemberDto dto2 = MemberDto.builder().name("Carol").email("carol@example.com").build();
-        memberService.create(dto1);
-        memberService.create(dto2);
+        memberService.save(new Member("Bob", "bob@example.com"));
+        memberService.save(new Member("Carol", "carol@example.com"));
+
         // when
         List<Member> all = memberService.findAll();
+
         // then
         assertThat(all).hasSize(2)
                 .extracting("email")
@@ -65,34 +64,30 @@ public class MemberServiceTest {
     }
 
     @Test
-    void 회원_정보_수정(){
+    void 회원_정보_수정() {
         // given
-        MemberDto createDto = MemberDto.builder()
-                .name("Dave")
-                .email("dave@example.com")
-                .build();
-        Member saved = memberService.create(createDto);
+        Member member = new Member("Dave", "dave@example.com");
+        Member saved = memberService.save(member);
+
         // when
-        MemberDto updateDto = MemberDto.builder()
-                .name("Smith")
-                .email("smith@example.com")
-                .build();
-        Member updated = memberService.update(saved.getId(), updateDto);
+        Member updateData = new Member("Smith", "smith@example.com");
+        Member updated = memberService.update(saved.getId(), updateData).orElse(null);
+
         // then
+        assertThat(updated).isNotNull();
         assertThat(updated.getName()).isEqualTo("Smith");
         assertThat(updated.getEmail()).isEqualTo("smith@example.com");
     }
 
     @Test
-    void 회원_정보_삭제(){
+    void 회원_정보_삭제() {
         // given
-        MemberDto dto = MemberDto.builder()
-                .name("Eve")
-                .email("eve@example.com")
-                .build();
-        Member saved = memberService.create(dto);
+        Member member = new Member("Eve", "eve@example.com");
+        Member saved = memberService.save(member);
+
         // when
         memberService.delete(saved.getId());
+
         // then
         assertThat(memberRepository.existsById(saved.getId())).isFalse();
     }

@@ -1,68 +1,56 @@
 package com.example.sshrestapi.controller;
 
-import com.example.sshrestapi.dto.MemberDto;
 import com.example.sshrestapi.entity.Member;
 import com.example.sshrestapi.service.MemberService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/members")
+@RequiredArgsConstructor
 public class WebMemberController {
 
     private final MemberService memberService;
 
-    @Autowired
-    public WebMemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
-
     @GetMapping
     public String list(Model model) {
-        List<Member> members = memberService.findAll();
-        model.addAttribute("members", members);
+        model.addAttribute("members", memberService.findAll());
         return "members/list";
-    }
-
-    @GetMapping("/new")
-    public String createForm(Model model) {
-        MemberDto memberDto = new MemberDto();
-        model.addAttribute("memberDto", memberDto);
-        return "members/form";
-    }
-
-    @PostMapping
-    public String create(@ModelAttribute MemberDto memberDto) {
-        memberService.create(memberDto);
-        return "redirect:/members";
     }
 
     @GetMapping("/{id}")
     public String view(@PathVariable Long id, Model model) {
-        Member member = memberService.findById(id);
+        Member member = memberService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다: " + id));
         model.addAttribute("member", member);
         return "members/view";
     }
 
+    @GetMapping("/new")
+    public String createForm(Model model) {
+        model.addAttribute("member", new Member());
+        return "members/form";
+    }
+
+    @PostMapping
+    public String create(@ModelAttribute Member member) {
+        memberService.save(member);
+        return "redirect:/members";
+    }
+
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
-        Member m = memberService.findById(id);
-        MemberDto dto = MemberDto.builder()
-                .name(m.getName())
-                .email(m.getEmail())
-                .build();
-        model.addAttribute("memberDto", dto);
-        model.addAttribute("id", id);
+        Member member = memberService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다: " + id));
+        model.addAttribute("member", member);
         return "members/form";
     }
 
     @PostMapping("/{id}/edit")
-    public String edit(@PathVariable Long id, @ModelAttribute MemberDto memberDto) {
-        memberService.update(id, memberDto);
+    public String edit(@PathVariable Long id, @ModelAttribute Member member) {
+        memberService.update(id, member);
         return "redirect:/members";
     }
 

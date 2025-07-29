@@ -1,57 +1,45 @@
 package com.example.sshrestapi.service;
 
-import com.example.sshrestapi.dto.MemberDto;
 import com.example.sshrestapi.entity.Member;
 import com.example.sshrestapi.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class MemberService {
-
     private final MemberRepository memberRepository;
 
-    @Autowired
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
-
+    // 전체 조회
     public List<Member> findAll() {
         return memberRepository.findAll();
     }
 
-    public Member findById(Long id) {
+    // 단건 조회
+    public Optional<Member> findById(Long id) {
+        return memberRepository.findById(id);
+    }
+
+    // 생성
+    public Member save(Member member) {
+        return memberRepository.save(member);
+    }
+
+    // 수정
+    public Optional<Member> update(Long id, Member memberData) {
         return memberRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("엔티티가 존재하지 않습니다."));
+                .map(existing -> {
+                    existing.setName(memberData.getName());
+                    existing.setEmail(memberData.getEmail());
+                    return memberRepository.save(existing);
+                });
     }
 
-    @Transactional
-    public Member create(MemberDto dto) {
-        Member member = Member.builder()
-                .name(dto.getName())
-                .email(dto.getEmail())
-                .build();
-        return memberRepository.save(member);
-    }
-
-    @Transactional
-    public Member update(Long id, MemberDto dto) {
-        Member member = findById(id);
-        member.setName(dto.getName());
-        member.setEmail(dto.getEmail());
-        return memberRepository.save(member);
-    }
-
-    @Transactional
+    // 삭제
     public void delete(Long id) {
-        boolean exist = memberRepository.existsById(id);
-        if (!exist) {
-            throw new RuntimeException("엔티티가 존재하지 않습니다.");
-        }
         memberRepository.deleteById(id);
     }
 }

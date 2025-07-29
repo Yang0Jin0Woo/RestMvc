@@ -1,9 +1,8 @@
 package com.example.sshrestapi.controller;
 
-import com.example.sshrestapi.dto.MemberDto;
 import com.example.sshrestapi.entity.Member;
 import com.example.sshrestapi.service.MemberService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,39 +11,36 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/members")
+@RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
 
-    @Autowired
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
-
     @GetMapping
     public ResponseEntity<List<Member>> getAll() {
-        List<Member> members = memberService.findAll();
-        return ResponseEntity.ok(members);
+        return ResponseEntity.ok(memberService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Member> getOne(@PathVariable Long id) {
-        Member member = memberService.findById(id);
-        return ResponseEntity.ok(member);
+        return memberService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Member> create(@RequestBody MemberDto dto) {
-        Member created = memberService.create(dto);
-        return ResponseEntity
-                .created(URI.create("/api/members/" + created.getId()))
-                .body(created);
+    public ResponseEntity<Member> create(@RequestBody Member member) {
+        Member saved = memberService.save(member);
+        URI location = URI.create("/api/members/" + saved.getId());
+        return ResponseEntity.created(location).body(saved);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Member> update(@PathVariable Long id, @RequestBody MemberDto dto) {
-        Member updated = memberService.update(id, dto);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<Member> update(@PathVariable Long id,
+                                         @RequestBody Member member) {
+        return memberService.update(id, member)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
