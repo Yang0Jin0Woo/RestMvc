@@ -3,6 +3,8 @@ package com.example.sshrestapi.service;
 import com.example.sshrestapi.entity.Member;
 import com.example.sshrestapi.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+
+    // 페이지 전체 조회
+    public Page<Member> findPage(Pageable pageable) {
+        return memberRepository.findAll(pageable);
+    }
 
     // 전체 조회
     public List<Member> findAll() {

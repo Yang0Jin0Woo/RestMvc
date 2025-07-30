@@ -3,6 +3,8 @@ package com.example.sshrestapi.controller;
 import com.example.sshrestapi.entity.Member;
 import com.example.sshrestapi.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +17,20 @@ public class WebMemberController {
     private final MemberService memberService;
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("members", memberService.findAll());
+    public String list(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size, Model model) {
+
+        Page<Member> memberPage = memberService.findPage(PageRequest.of(page, size));
+        model.addAttribute("memberPage", memberPage);
         return "members/list";
     }
+
+//    @GetMapping
+//    public String list(Model model) {
+//        model.addAttribute("members", memberService.findAll());
+//        return "members/list";
+//    }
 
     @GetMapping("/{id}")
     public String view(@PathVariable Long id, Model model) {

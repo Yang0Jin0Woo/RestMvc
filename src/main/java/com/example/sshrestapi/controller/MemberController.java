@@ -3,6 +3,9 @@ package com.example.sshrestapi.controller;
 import com.example.sshrestapi.entity.Member;
 import com.example.sshrestapi.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +18,15 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<Member>> getPagedMembers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Member> pagedResult = memberService.findPage(pageable);
+        return ResponseEntity.ok(pagedResult);
+    }
 
     @GetMapping
     public ResponseEntity<List<Member>> getAll() {
