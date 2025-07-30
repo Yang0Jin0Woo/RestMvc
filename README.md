@@ -1,5 +1,5 @@
 ## 소개
-- 회원(Member) 데이터를 관리하는 CRUD 프로젝트
+- Member 데이터를 관리하는 CRUD 프로젝트
 - `/api/members` 경로 : RESTful API
 - `/members` 경로 : Thymeleaf 기반의 웹.
 
