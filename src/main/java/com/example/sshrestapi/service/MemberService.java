@@ -15,27 +15,22 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    // 페이지 전체 조회
     public Page<Member> findPage(Pageable pageable) {
         return memberRepository.findAll(pageable);
     }
 
-    // 전체 조회
     public List<Member> findAll() {
         return memberRepository.findAll();
     }
 
-    // 단건 조회
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id);
     }
 
-    // 생성
     public Member save(Member member) {
         return memberRepository.save(member);
     }
 
-    // 수정
     public Optional<Member> update(Long id, Member memberData) {
         return memberRepository.findById(id)
                 .map(existing -> {
@@ -45,7 +40,6 @@ public class MemberService {
                 });
     }
 
-    // 삭제
     public void delete(Long id) {
         memberRepository.deleteById(id);
     }
