@@ -11,7 +11,7 @@
 </head>
 <body>
 <h1>회원 목록</h1>
-<a href="/members/new">+ 새 회원 등록</a>
+<a th:href="@{/members/new}">+ 새 회원 등록</a>
 
 <table border="1" cellpadding="5">
     <thead>
@@ -42,33 +42,31 @@
     <div id="page-links"></div>
 </div>
 
-<script>
+<script th:inline="javascript">
     /*<![CDATA[*/
-    const apiUrl = /*[[@{/api/members/page}]]*/ '/api/members/page';
+    const host     = window.location.origin;
+    const apiUrl   = host + /*[[@{/api/members/page}]]*/ '/api/members/page';
 
-    // ① URL에서 page, size 파라미터 읽기 (없으면 서버 초기값 사용)
-    const urlParams = new URLSearchParams(window.location.search);
-    let currentPage = urlParams.has('page')
-                      ? parseInt(urlParams.get('page'))
-                      : /*[[${memberPage.number}]]*/ 0;
-    const pageSize  = urlParams.has('size')
-                      ? parseInt(urlParams.get('size'))
-                      : /*[[${memberPage.size}]]*/ 10;
+    const urlParams   = new URLSearchParams(window.location.search);
+    let   currentPage = urlParams.has('page')
+                        ? parseInt(urlParams.get('page'))
+                        : /*[[${memberPage.number}]]*/ 0;
+    const pageSize    = urlParams.has('size')
+                        ? parseInt(urlParams.get('size'))
+                        : /*[[${memberPage.size}]]*/ 10;
 
-    // ② URL 업데이트 함수 (replaceState로 새로고침 시에도 유지)
     function updateUrl(page) {
-        const newUrl = `?page=${page}&size=${pageSize}`;
-        history.replaceState(null, '', newUrl);
+        const basePath = /*[[@{/members}]]*/ '/members';
+        history.replaceState(null, '', `${basePath}?page=${page}&size=${pageSize}`);
     }
 
-    // 1) 회원 리스트 가져와서 테이블 갱신
     function getMemberList(page = currentPage) {
         fetch(`${apiUrl}?page=${page}&size=${pageSize}`)
           .then(res => res.json())
           .then(data => {
-            // 표 갱신
             const tbody = document.getElementById('member-tbody');
             tbody.innerHTML = '';
+
             data.content.forEach(m => {
               const tr = document.createElement('tr');
               tr.innerHTML = `
@@ -76,16 +74,15 @@
                 <td>${m.name}</td>
                 <td>${m.email}</td>
                 <td>
-                  <a href="/members/${m.id}">상세</a> |
-                  <a href="/members/${m.id}/edit">수정</a> |
-                  <form action="/members/${m.id}/delete" method="post" style="display:inline;">
+                  <a href="${host}/members/${m.id}">상세</a> |
+                  <a href="${host}/members/${m.id}/edit">수정</a> |
+                  <form action="${host}/members/${m.id}/delete" method="post" style="display:inline;">
                     <button type="submit" onclick="return confirm('삭제하시겠습니까?');">삭제</button>
                   </form>
                 </td>`;
               tbody.appendChild(tr);
             });
 
-            // 페이지 상태 업데이트 & URL 갱신
             currentPage = data.number;
             updateUrl(currentPage);
             renderPagination(data);
@@ -93,13 +90,10 @@
           .catch(err => console.error('회원 목록 조회 실패:', err));
     }
 
-    // 2) 페이지 네비게이션 갱신
     function renderPagination(pageData) {
-        // info
         document.getElementById('page-info').textContent =
           `페이지 ${pageData.number + 1} / ${pageData.totalPages}`;
 
-        // links
         const container = document.getElementById('page-links');
         container.innerHTML = '';
 
@@ -135,12 +129,10 @@
         }
     }
 
-    // ③ 페이지 로드 시 URL 파라미터 기반으로 초기 호출
     document.addEventListener('DOMContentLoaded', () => {
         getMemberList(currentPage);
     });
     /*]]>*/
 </script>
-
 </body>
 </html>

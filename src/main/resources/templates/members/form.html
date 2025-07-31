@@ -7,11 +7,19 @@
 <body>
 <h1 th:text="${member.id} != null ? '회원 수정' : '새 회원 등록'">폼</h1>
 
-<form th:action="@{${member.id} != null ? '/members/' + ${member.id} + '/edit' : '/members'}"
+<form th:action="@{${member.id} != null ? '/members/'+${member.id}+'/edit' : '/members'}"
       th:object="${member}"
       method="post">
-    <label>이름: <input type="text" th:field="*{name}" /></label><br/><br/>
-    <label>이메일: <input type="email" th:field="*{email}" /></label><br/><br/>
+    <label>
+        이름:
+        <input type="text" th:field="*{name}" placeholder="이름을 입력하세요" required/>
+    </label>
+    <br/><br/>
+    <label>
+        이메일:
+        <input type="email" th:field="*{email}" placeholder="이메일을 입력하세요" required/>
+    </label>
+    <br/><br/>
     <button type="submit">저장</button>
 </form>
 

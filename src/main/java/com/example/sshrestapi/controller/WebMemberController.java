@@ -22,6 +22,11 @@ public class WebMemberController {
             @RequestParam(defaultValue = "10") int size, Model model) {
 
         Page<Member> memberPage = memberService.findPage(PageRequest.of(page, size));
+
+        if (memberPage.getContent().isEmpty() && page > 0) {
+            return "redirect:/members?page=0&size=" + size;
+        }
+
         model.addAttribute("memberPage", memberPage);
         return "members/list";
     }
