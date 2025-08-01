@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
 
@@ -29,12 +28,10 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
-    @Transactional
     public Member save(Member member) {
         return memberRepository.save(member);
     }
 
-    @Transactional
     public Optional<Member> update(Long id, Member memberData) {
         return memberRepository.findById(id)
                 .map(existing -> {
@@ -44,7 +41,6 @@ public class MemberService {
                 });
     }
 
-    @Transactional
     public void delete(Long id) {
         memberRepository.deleteById(id);
     }
