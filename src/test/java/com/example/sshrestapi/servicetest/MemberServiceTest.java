@@ -41,7 +41,7 @@ public class MemberServiceTest {
         Member saved = memberService.save(member);
 
         // when
-        Member found = memberService.findById(saved.getId()).orElse(null);
+        Member found = memberService.findById(saved.getId());
 
         // then
         assertThat(found).isNotNull();
@@ -71,7 +71,7 @@ public class MemberServiceTest {
 
         // when
         Member updateData = new Member("Smith", "smith@example.com");
-        Member updated = memberService.update(saved.getId(), updateData).orElse(null);
+        Member updated = memberService.update(saved.getId(), updateData);
 
         // then
         assertThat(updated).isNotNull();

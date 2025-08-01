@@ -39,8 +39,7 @@ public class WebMemberController {
 
     @GetMapping("/{id}")
     public String view(@PathVariable Long id, Model model) {
-        Member member = memberService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다: " + id));
+        Member member = memberService.findById(id);
         model.addAttribute("member", member);
         return "members/view";
     }
@@ -59,8 +58,7 @@ public class WebMemberController {
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
-        Member member = memberService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다: " + id));
+        Member member = memberService.findById(id);
         model.addAttribute("member", member);
         return "members/form";
     }
@@ -68,7 +66,7 @@ public class WebMemberController {
     @PostMapping("/{id}/edit")
     public String edit(@PathVariable Long id, @ModelAttribute Member member) {
         memberService.update(id, member);
-        return "redirect:/members";
+        return "redirect:/members/"+id;
     }
 
     @PostMapping("/{id}/delete")

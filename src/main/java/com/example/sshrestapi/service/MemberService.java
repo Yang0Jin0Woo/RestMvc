@@ -2,6 +2,7 @@ package com.example.sshrestapi.service;
 
 import com.example.sshrestapi.entity.Member;
 import com.example.sshrestapi.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
 
@@ -24,24 +26,29 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
-    public Optional<Member> findById(Long id) {
-        return memberRepository.findById(id);
+    public Member findById(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Member 찾을 수 없음. " + id));
     }
 
+    @Transactional
     public Member save(Member member) {
         return memberRepository.save(member);
     }
 
-    public Optional<Member> update(Long id, Member memberData) {
-        return memberRepository.findById(id)
-                .map(existing -> {
-                    existing.setName(memberData.getName());
-                    existing.setEmail(memberData.getEmail());
-                    return existing;
-                });
+    @Transactional
+    public Member update(Long id, Member updateData) {
+        Member existing = findById(id);
+        existing.setName(updateData.getName());
+        existing.setEmail(updateData.getEmail());
+        return existing;
     }
 
+    @Transactional
     public void delete(Long id) {
+        if (!memberRepository.existsById(id)) {
+            throw new EntityNotFoundException("Member 찾을 수 없음. " + id);
+        }
         memberRepository.deleteById(id);
     }
 }
