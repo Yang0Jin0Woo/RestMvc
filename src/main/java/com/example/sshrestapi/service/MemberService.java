@@ -6,12 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
 
@@ -27,19 +29,22 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
+    @Transactional
     public Member save(Member member) {
         return memberRepository.save(member);
     }
 
+    @Transactional
     public Optional<Member> update(Long id, Member memberData) {
         return memberRepository.findById(id)
                 .map(existing -> {
                     existing.setName(memberData.getName());
                     existing.setEmail(memberData.getEmail());
-                    return memberRepository.save(existing);
+                    return existing;
                 });
     }
 
+    @Transactional
     public void delete(Long id) {
         memberRepository.deleteById(id);
     }
