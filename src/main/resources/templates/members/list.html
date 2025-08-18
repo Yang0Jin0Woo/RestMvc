@@ -48,16 +48,21 @@
     const apiUrl   = host + /*[[@{/api/members/page}]]*/ '/api/members/page';
 
     const urlParams   = new URLSearchParams(window.location.search);
-    let   currentPage = urlParams.has('page')
-                        ? parseInt(urlParams.get('page'))
-                        : /*[[${memberPage.number}]]*/ 0;
-    const pageSize    = urlParams.has('size')
-                        ? parseInt(urlParams.get('size'))
-                        : /*[[${memberPage.size}]]*/ 10;
 
-    function updateUrl(page) {
+    // ✅ URL은 1-based, 내부 로직/서버 호출은 0-based
+    let currentPage = urlParams.has('page')
+                      ? Math.max(0, parseInt(urlParams.get('page')) - 1)  // 1→0 보정
+                      : /*[[${memberPage.number}]]*/ 0;
+
+    const pageSize    = urlParams.has('size')
+                      ? parseInt(urlParams.get('size'))
+                      : /*[[${memberPage.size}]]*/ 10;
+
+    // ✅ 주소창에는 항상 1-based로 표기
+    function updateUrl(zeroBasedPage) {
         const basePath = /*[[@{/members}]]*/ '/members';
-        history.replaceState(null, '', `${basePath}?page=${page}&size=${pageSize}`);
+        const oneBased = zeroBasedPage + 1;
+        history.replaceState(null, '', `${basePath}?page=${oneBased}&size=${pageSize}`);
     }
 
     function getMemberList(page = currentPage) {
@@ -83,20 +88,22 @@
               tbody.appendChild(tr);
             });
 
-            currentPage = data.number;
-            updateUrl(currentPage);
+            currentPage = data.number;          // 0-based
+            updateUrl(currentPage);             // 주소창은 1-based로 갱신
             renderPagination(data);
           })
           .catch(err => console.error('회원 목록 조회 실패:', err));
     }
 
     function renderPagination(pageData) {
+        // 페이지 정보는 1-based로 표시
         document.getElementById('page-info').textContent =
           `페이지 ${pageData.number + 1} / ${pageData.totalPages}`;
 
         const container = document.getElementById('page-links');
         container.innerHTML = '';
 
+        // 이전
         if (!pageData.first) {
             const prev = document.createElement('a');
             prev.href = '#';
@@ -105,21 +112,23 @@
             container.appendChild(prev);
         }
 
-        for (let i = 0; i < pageData.totalPages; i++) {
-            if (i === pageData.number) {
+        // 숫자 페이지 (화면: 1..N, 내부 요청: 0..N-1)
+        for (let i = 1; i <= pageData.totalPages; i++) {
+            if (i === pageData.number + 1) {
                 const span = document.createElement('span');
-                span.textContent = i + 1;
+                span.textContent = i;
                 span.classList.add('current-page');
                 container.appendChild(span);
             } else {
                 const a = document.createElement('a');
                 a.href = '#';
-                a.textContent = i + 1;
-                a.onclick = e => { e.preventDefault(); getMemberList(i); };
+                a.textContent = i;
+                a.onclick = e => { e.preventDefault(); getMemberList(i - 1); }; // 1→0 보정
                 container.appendChild(a);
             }
         }
 
+        // 다음
         if (!pageData.last) {
             const next = document.createElement('a');
             next.href = '#';
