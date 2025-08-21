@@ -15,7 +15,7 @@ Spring Boot 기반의 회원 관리 CRUD 프로젝트**입니다.
 * 회원 단건 조회
 * 회원 등록 / 수정 / 삭제
 * REST API & MVC UI 동시 지원
-* H2 인메모리 DB 기본 설정
+* H2 인메모리 DB 기본 설정 -> MySQL DB 기본 설정
 * 서비스 & DB 연동 통합 테스트
 
 ---
@@ -85,10 +85,16 @@ Spring Boot 기반의 회원 관리 CRUD 프로젝트**입니다.
 
 ```properties
 # H2 DB 설정
-spring.datasource.url=jdbc:h2:tcp://localhost/~/test
-spring.datasource.driver-class-name=org.h2.Driver
-spring.datasource.username=sa
-spring.datasource.password=
+#spring.datasource.url=jdbc:h2:tcp://localhost/~/test
+#spring.datasource.driver-class-name=org.h2.Driver
+#spring.datasource.username=sa
+#spring.datasource.password=
+
+# MySQL 설정
+spring.datasource.url=jdbc:mysql://localhost:3306/restmvc?serverTimezone=Asia/Seoul
+spring.datasource.username=restmvc
+spring.datasource.password=1111
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
 # JPA
 spring.h2.console.enabled=true
