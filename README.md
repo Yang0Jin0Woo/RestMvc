@@ -64,11 +64,9 @@ Spring Boot 기반의 회원 관리 CRUD 프로젝트**입니다.
 
 ## 실행 방법
 
-* 브라우저 접속 :
-
+* 브라우저 접속
     * `http://localhost:8080/members`
-* REST API 호출(Postman 등):
-
+* REST API 호출(Postman 등)
     * `http://localhost:8080/api/members`
 
 ---
@@ -104,3 +102,4 @@ spring.jpa.hibernate.ddl-auto=update
 spring.sql.init.mode=always
 spring.sql.init.schema-locations=classpath:schema.sql
 ```
+- H2, MySQL 중 1개 선택해서 사용
